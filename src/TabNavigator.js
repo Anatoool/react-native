@@ -8,6 +8,7 @@ import ClockIcon from './assets/images/icons/clock.svg';
 import MegaphoneIcon from './assets/images/icons/megaphone.svg';
 import DocIcon from './assets/images/icons/doc.svg';
 import MoreIcon from './assets/images/icons/more.svg';
+import {STYLES_CONSTANTS} from './constants/styles';
 
 const ROUTE_NAMES = {
   TRIP: 'Trip',
@@ -16,8 +17,8 @@ const ROUTE_NAMES = {
   MORE: 'More',
 };
 
-const activeTintColor = 'rgb(10, 68, 245)';
-const inactiveTintColor = 'gray';
+const activeTintColor = STYLES_CONSTANTS.mainBlueText;
+const inactiveTintColor = STYLES_CONSTANTS.mainGrayText;
 
 export const TabNavigator = createBottomTabNavigator(
   {
@@ -27,23 +28,31 @@ export const TabNavigator = createBottomTabNavigator(
     [ROUTE_NAMES.MORE]: {screen: MoreScreen},
   },
   {
-    defaultNavigationOptions: ({navigation}) => ({
-      tabBarIcon: ({focused, horizontal, tintColor}) => {
-        const {routeName} = navigation.state;
-        switch (routeName) {
-          case ROUTE_NAMES.TRIP:
-            return <ClockIcon height={20} fill={tintColor} />;
-          case ROUTE_NAMES.GUIDE:
-            return <MegaphoneIcon height={20} fill={tintColor} />;
-          case ROUTE_NAMES.DOCS:
-            return <DocIcon height={20} fill={tintColor} />;
-          case ROUTE_NAMES.MORE:
-            return <MoreIcon height={20} fill={tintColor} />;
-          default:
-            return null;
-        }
-      },
-    }),
+    defaultNavigationOptions: ({navigation}) => {
+      const {routeName} = navigation.state;
+      let IconComponent;
+      switch (routeName) {
+        case ROUTE_NAMES.TRIP:
+          IconComponent = ClockIcon;
+          break;
+        case ROUTE_NAMES.GUIDE:
+          IconComponent = MegaphoneIcon;
+          break;
+        case ROUTE_NAMES.DOCS:
+          IconComponent = DocIcon;
+          break;
+        case ROUTE_NAMES.MORE:
+          IconComponent = MoreIcon;
+          break;
+        default:
+          IconComponent = null;
+      }
+      return {
+        tabBarIcon: ({focused, horizontal, tintColor}) => {
+          return <IconComponent height={20} fill={tintColor} />;
+        },
+      };
+    },
     tabBarOptions: {
       activeTintColor,
       inactiveTintColor,
@@ -63,8 +72,8 @@ export const TabNavigator = createBottomTabNavigator(
         justifyContent: 'space-between',
       },
       labelStyle: {
-        marginTop: -5,
-        paddingBottom: 3,
+        marginTop: -2,
+        paddingBottom: 2,
       },
     },
   },
